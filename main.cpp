@@ -56,7 +56,7 @@ uint64_t parseUInt64(const char* string) noexcept {
 	for (size_t i = 1; string[i] != '\0'; i++) {
 		unsigned char digit = string[i] - '0';
 		if (digit > 9) { REPORT_ERROR_AND_EXIT("<num-repeats> arg is invalid", EXIT_SUCCESS); }
-		// NOTE: Optimal compiler optimization would be if the for loop gets unrolled so that the first digits (till MAX_DIGITS... - 1) don't do any of the below.
+		// NOTE: Optimal compiler optimization would be if the for loop gets unrolled so that the first digits (till digits<(uint64_t)-1>{} - 1) don't do any of the below.
 		// NOTE: Additionally, the subtract and divide could be replaced by a switch case by the compiler.
 		// TODO: Are there any other fancy ways to do this parsing stuff? Research.
 		if (i >= digits<(uint64_t)-1>{} - 1 && ((uint64_t)-1 - digit) / 10 < result) { REPORT_ERROR_AND_EXIT("<num-repeats> arg too large", EXIT_SUCCESS); }
