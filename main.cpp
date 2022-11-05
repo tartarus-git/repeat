@@ -86,19 +86,20 @@ uint64_t parseUInt64(const char* string) noexcept {
 	if (result > 9) { REPORT_ERROR_AND_EXIT("<num-repeats> arg is invalid", EXIT_SUCCESS); }
 
 	for (size_t i = 1; string[i] != '\0'; i++) {
+		if (i >= digits<(uint64_t)-1>{}) { REPORT_ERROR_AND_EXIT("<num-repeats> arg too large", EXIT_SUCCESS); }
+
 		unsigned char digit = string[i] - '0';
 		if (digit > 9) { REPORT_ERROR_AND_EXIT("<num-repeats> arg is invalid", EXIT_SUCCESS); }
 
-		// NOTE: Optimal compiler optimization would be if the for loop gets unrolled so that the first digits (till digits<(uint64_t)-1>{} - 1) don't do any of the below.
-		// TODO: Are there any other fancy ways to do this parsing stuff? Research.
+		// NOTE: Optimal compiler optimization would be if the for loop gets unrolled so that the first digits don't have to do
+		// the overflow check, which obviously only comes into play once the number gets higher.
+		// Also, it would be cool if the i check dissappears when the loop is unrolled, since that is also possible.
 
 		uint64_t shifted_result = result * 10;
 		if (shifted_result / 10 != result) { REPORT_ERROR_AND_EXIT("<num-repeats> arg too large", EXIT_SUCCESS); }
-		if (i == digits<(uint64_t)-1>{} - 1) { REPORT_ERROR_AND_EXIT("<num-repeats> arg too large", EXIT_SUCCESS); }
-		// TODO: Figure out the rest of this overflow detection stuff.
+
 		result = shifted_result + digit;
 		if (result < shifted_result) { REPORT_ERROR_AND_EXIT("<num-repeats> arg too large", EXIT_SUCCESS); }
-
 	}
 
 	return result;
