@@ -79,16 +79,19 @@ struct digits {
 	constexpr operator uint8_t() const noexcept { return value; }
 };
 
-uint64_t parseUInt64(const char* string) noexcept {
-	if (string[0] == '\0') { REPORT_ERROR_AND_EXIT("<num-repeats> arg cannot be empty", EXIT_SUCCESS); }
+uint64_t parseUInt64(const char* string_input) noexcept {
+	if (string_input[0] == '\0') { REPORT_ERROR_AND_EXIT("<num-repeats> arg cannot be empty", EXIT_SUCCESS); }
 
-	uint64_t result = string[0] - '0';
+	const unsigned char* string = (const unsigned char*)string_input;
+	// NOTE: SIGNED INTEGER OVERFLOW IS UNDEFINED, AVOID IT AT ALL COSTS!
+
+	uint64_t result = string[0] - (unsigned char)'0';
 	if (result > 9) { REPORT_ERROR_AND_EXIT("<num-repeats> arg is invalid", EXIT_SUCCESS); }
 
 	for (size_t i = 1; string[i] != '\0'; i++) {
 		if (i >= digits<(uint64_t)-1>{}) { REPORT_ERROR_AND_EXIT("<num-repeats> arg too large", EXIT_SUCCESS); }
 
-		unsigned char digit = string[i] - '0';
+		unsigned char digit = string[i] - (unsigned char)'0';
 		if (digit > 9) { REPORT_ERROR_AND_EXIT("<num-repeats> arg is invalid", EXIT_SUCCESS); }
 
 		// NOTE: Optimal compiler optimization would be if the for loop gets unrolled so that the first digits don't have to do
