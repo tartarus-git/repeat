@@ -2,6 +2,7 @@ undefine MAIN_CPP_INCLUDES
 
 BINARY_NAME := repeat
 
+CLANG_PROGRAM_NAME := clang++-15
 CPP_STD := c++20
 OPTIMIZATION_LEVEL := O3
 USE_WALL := true
@@ -11,7 +12,7 @@ else
 undefine POSSIBLE_WALL
 endif
 
-CLANG_PREAMBLE := clang++-11 -std=$(CPP_STD) -$(OPTIMIZATION_LEVEL) $(POSSIBLE_WALL) -fno-exceptions
+CLANG_PREAMBLE := $(CLANG_PROGRAM_NAME) -std=$(CPP_STD) -$(OPTIMIZATION_LEVEL) $(POSSIBLE_WALL) -fno-exceptions
 
 .PHONY: all unoptimized touch_all clean clean_include_swaps
 
